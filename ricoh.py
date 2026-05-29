@@ -5,8 +5,8 @@ import os
 
 URL = "https://ricohimagingstore.com/Page/Feature/FeaturePage009.aspx"
 
-LINE_ACCESS_TOKEN = os.environ["NpJHN49eHW1MIrZLy5+81x5yD9pG7sI6/6ddX0CjFTz6WIbYxrzVp4z3VT23aTQJoEDTIWJI7wejqDj00T34U3Kk+ARNHnF1IynCSwuuGJIE2Skzz6MS2t8dGNkisARTd5te9efP6kpxiD6mbbTVmQdB04t89/1O/w1cDnyilFU="]
-USER_ID = os.environ["Udd852596a6ee05abda7341fa7e024677"]
+LINE_ACCESS_TOKEN = os.environ["LINE_ACCESS_TOKEN"]
+USER_ID = os.environ["LINE_USER_ID"]
 
 SAVE_FILE = "last_update.txt"
 
