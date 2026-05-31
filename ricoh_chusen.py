@@ -1,7 +1,7 @@
+import os
+import re
 import requests
 from bs4 import BeautifulSoup
-import re
-import os
 
 URL = "https://ricohimagingstore.com/Page/Feature/FeaturePage009.aspx"
 
@@ -28,18 +28,32 @@ def send_line(message):
         ]
     }
 
-    requests.post(
+    response = requests.post(
         "https://api.line.me/v2/bot/message/push",
         headers=headers,
-        json=data
+        json=data,
+        timeout=30
     )
+
+    print(f"LINE status = {response.status_code}")
+    print(response.text)
+
+    response.raise_for_status()
 
 
 def get_update_text():
 
-    response = requests.get(URL)
+    response = requests.get(
+        URL,
+        timeout=30
+    )
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    response.raise_for_status()
+
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser"
+    )
 
     text = soup.get_text()
 
@@ -56,27 +70,44 @@ def get_update_text():
 
 latest = get_update_text()
 
+if latest is None:
+    raise Exception("Không tìm thấy 最終更新日 trên website")
+
 old = ""
 
 if os.path.exists(SAVE_FILE):
 
-    with open(SAVE_FILE, "r") as f:
+    with open(
+        SAVE_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
         old = f.read().strip()
+
+print(f"latest = [{latest}]")
+print(f"old    = [{old}]")
 
 if latest != old:
 
-    msg = (
+    message = (
         "RICOH抽選ページ更新！\n\n"
-        f"最終更新日:\n{latest}\n\n"
+        f"最終更新日: {latest}\n\n"
         f"{URL}"
     )
 
-    send_line(msg)
+    send_line(message)
 
-    with open(SAVE_FILE, "w") as f:
+    with open(
+        SAVE_FILE,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
         f.write(latest)
 
     print("LINE sent")
+    print(f"saved = {latest}")
 
 else:
 
